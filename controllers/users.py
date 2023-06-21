@@ -15,7 +15,7 @@ class UserManagement:
 
         # Guardar los cambios en el archivo CSV
         self.dataframe.to_csv(self.csv_filename, index=False)
-  
+
     def remove_user(self, id):
         self.dataframe = self.dataframe[self.dataframe['id'] != id]
 
@@ -100,4 +100,4 @@ csv_filename = 'data/usuarios.csv'
 df_usuarios = UserManagement.create_df_from_csv(csv_filename)
 
 # Obtener estadísticas de usuarios por ocupación y filtrar por año de nacimiento y cantidad de usuarios
-UserManagement.get_stats(df_usuarios, occupations=['technician', 'manager', 'educator'], birth_year=1997, min_users=5)
+UserManagement.get_stats(df_usuarios, occupations=['technician', 'educator'], birth_year=1997, min_users=5)
