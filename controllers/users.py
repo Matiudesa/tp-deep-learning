@@ -15,7 +15,7 @@ class UserManagement:
 
         # Guardar los cambios en el archivo CSV
         self.dataframe.to_csv(self.csv_filename, index=False)
-
+  
     def remove_user(self, id):
         self.dataframe = self.dataframe[self.dataframe['id'] != id]
 
@@ -94,7 +94,7 @@ class UserManagement:
 
 
 # Nombre del archivo CSV
-csv_filename = 'usuarios.csv'
+csv_filename = 'data/usuarios.csv'
 
 # Cargar el DataFrame existente desde el archivo CSV
 df_usuarios = UserManagement.create_df_from_csv(csv_filename)
