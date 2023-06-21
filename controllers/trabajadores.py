@@ -1,8 +1,13 @@
-from controllers.personas import Personas
-from dtos.trabajadoresDTO import TrabajadoresDTO
+from personas import Personas
+class Trabajadores(Personas):
 
-class Trabajadores(Personas, TrabajadoresDTO):
-
+    def __init__(self, nombre, fecha_nacimiento, genero, codigo_postal, fecha_alta, puesto, horario_trabajo, categoria, id = None):
+        super().__init__(nombre, fecha_nacimiento, genero, codigo_postal, id)
+        self.fecha_alta = fecha_alta
+        self.puesto = puesto
+        self.horario_trabajo = horario_trabajo
+        self.categoria = categoria
+        
     def __repr__(self):
         base_repr = super().__repr__()
         trabajadores_repr = list()
@@ -16,10 +21,10 @@ class Trabajadores(Personas, TrabajadoresDTO):
 t = Trabajadores(
     fecha_alta= '15/05/2005',
     fecha_nacimiento= '11/04/2000',
-    nombre='Lucas Martinez',
-    genero='M',
+    nombre = 'Lucas Martinez',
+    genero='H',
     categoria='C',
-    puesto='Vendedor',
+    puesto='Ingeniero',
     horario_trabajo='09.00-18.00hs',
     id=1254,
     codigo_postal='B1713'
