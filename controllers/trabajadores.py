@@ -1,5 +1,6 @@
 from personas import Personas, PERSONAS_CSV_ROUTE
 import pandas as pd
+import matplotlib.pyplot as plt
 
 TRABAJADORES_CSV_ROUTE = 'data/trabajadores.csv'
 
@@ -25,6 +26,22 @@ class Trabajadores(Personas):
     def create_df_from_csv(cls, filename):
         df_trabajadores = pd.read_csv(filename)
         return df_trabajadores
+    
+    @classmethod
+    def get_stats(self, df_trabajadores, puesto = None):
+
+        if(puesto != None):
+            result_df  = df_trabajadores[df_trabajadores['Position'] == puesto]
+            print(f'Cantidad de trabajadores en el puesto {puesto}: {result_df.shape[0]}')
+        else:
+            result_df = df_trabajadores
+            print(f'Cantidad de trabajadores: {result_df.shape[0]}')
+
+        cant_por_puesto = result_df['Position'].value_counts()
+        plt.bar(cant_por_puesto.index, cant_por_puesto.values)
+        plt.title('Cantidad de trabajadores por puesto')
+        plt.show()
+
 
 
     def write_df(self, df_trabajadores, overwrite = False):  
@@ -44,7 +61,20 @@ class Trabajadores(Personas):
             df_trabajadores.to_csv(TRABAJADORES_CSV_ROUTE, index=False)
             print("Se ha creado el registro en trabajadores.")
             
-
+    def remove_from_df(self, df_trabajadores):
+        match = ( 
+              (df_trabajadores['id'] == self.id) &
+              (df_trabajadores['Position'] == self.puesto) &
+              (df_trabajadores['Category'] == self.categoria) &
+              (df_trabajadores['Working Hours'] == self.horario_trabajo) &
+              (df_trabajadores['Start Date'] == self.fecha_alta)
+            )
+        if match.any():
+            df_trabajadores.drop(match[match].index, inplace=True)
+            df_trabajadores.to_csv(TRABAJADORES_CSV_ROUTE, index=False)
+            print("Se ha eliminado el registro del trabajador.")
+        else:
+            print("No se ha encontrado el registro.")
 
 # Objeto instanciado para probar el funcionamiento de la clase
 t = Trabajadores(
@@ -55,8 +85,11 @@ t = Trabajadores(
     categoria='A',
     puesto='IT',
     horario_trabajo='9-18',
-    codigo_postal='B1713'
+    codigo_postal='B1713',
+    id=944
 )
 
 # Metodo que retorna un dataframe a partir del archivo csv en la ruta pasada por parametro
 df_trabajadores = Trabajadores.create_df_from_csv(TRABAJADORES_CSV_ROUTE)
+t.get_stats(df_trabajadores)
+

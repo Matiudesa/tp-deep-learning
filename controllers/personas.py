@@ -60,8 +60,6 @@ class Personas():
     def write_df(self, df_personas, overwrite=False):
         
         if (self.id != None):
-            
-
             if overwrite:
                 df_personas.loc[df_personas['id'] == self.id] = [self.id, self.nombre, self.fecha_nacimiento, self.genero, self.codigo_postal]
                 df_personas.to_csv(PERSONAS_CSV_ROUTE, index=False)
@@ -121,19 +119,20 @@ class Personas():
 
     # Metodo que elimina un registro de personas en el archivo csv solamente cuando todos los atributos del objeto instanciado 
     # coinciden con los del registro   
-    def remove_from_df(self, df):
+    def remove_from_df(self, df_personas):
        
         match = ( 
-                  (df['id'] == self.id) &
-                  (df['Full Name'] == self.nombre) &
-                  (df['year of birth'] == self.fecha_nacimiento) &
-                  (df['Gender'] == self.genero) &
-                  (df['Zip Code'] == self.codigo_postal)
+                  (df_personas['id'] == self.id) &
+                  (df_personas['Full Name'] == self.nombre) &
+                  (df_personas['year of birth'] == self.fecha_nacimiento) &
+                  (df_personas['Gender'] == self.genero) &
+                  (df_personas['Zip Code'] == self.codigo_postal)
                 )
-       
+        
         if match.any():
-            df = df.drop(match.index)
-            df.to_csv(PERSONAS_CSV_ROUTE, index=False)
+            df_personas.drop(match[match].index, inplace=True)
+            df_personas.reset_index(drop=True, inplace=True)
+            df_personas.to_csv(PERSONAS_CSV_ROUTE, index=False)
             print("Se ha eliminado el registro de personas.")
         else:
             print("No se ha encontrado el registro de personas.")
@@ -142,6 +141,14 @@ class Personas():
     
 # Metodo que retorna un dataframe a partir del archivo csv en la ruta pasada por parametro
 df_personas = Personas.create_df_from_csv(PERSONAS_CSV_ROUTE)
+
+p = Personas(
+    fecha_nacimiento= 2000,
+    nombre = 'Lucas Martinez',
+    genero='M',
+    codigo_postal='B1713',
+)
+
 
 
 
