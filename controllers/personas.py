@@ -15,7 +15,6 @@ class Personas():
         self.codigo_postal = codigo_postal
         self.id = id
 
-
     # Dunder para imprimir atributos del objeto instanciado
     def __repr__(self) -> str:
         string = list()

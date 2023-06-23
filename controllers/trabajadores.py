@@ -1,5 +1,4 @@
 from personas import Personas, PERSONAS_CSV_ROUTE
-from datetime import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -125,5 +124,5 @@ t = Trabajadores(
 
 # Metodo que retorna un dataframe a partir del archivo csv en la ruta pasada por parametro
 df_trabajadores = Trabajadores.create_df_from_csv(TRABAJADORES_CSV_ROUTE)
-print(Trabajadores.get_from_df(df_trabajadores, categoria='C'))
+#print(Trabajadores.get_from_df(df_trabajadores, categoria='C'))
 
