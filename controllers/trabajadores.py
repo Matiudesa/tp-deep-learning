@@ -1,4 +1,5 @@
 from personas import Personas, PERSONAS_CSV_ROUTE
+from datetime import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -25,16 +26,18 @@ class Trabajadores(Personas):
     @classmethod
     def create_df_from_csv(cls, filename) -> pd.DataFrame:
         df_trabajadores = pd.read_csv(filename)
+        df_trabajadores["Start Date"] = df_trabajadores["Start Date"].fillna('1-Jan-1900')
+        df_trabajadores["Start Date"] = df_trabajadores["Start Date"].apply(lambda x: datetime.strptime(x, '%Y-%m-%d'))
         return df_trabajadores
     @classmethod
     def get_from_df(cls, df_trabajadores , fecha_alta=None, puesto=None, horario_trabajo=None, categoria=None) -> pd.DataFrame:
         query = []
 
-        if (puesto != None):
+        if (puesto is not None):
             query.append(f' `Position` == "{puesto}" ')
-        if (categoria != None):
+        if (categoria is not None):
             query.append(f' Category == "{categoria}" ')
-        if (horario_trabajo != None):
+        if (horario_trabajo is not None):
             query.append(f' `Working Hours` == "{horario_trabajo}" ')
 
         if len(query) > 0:
@@ -48,7 +51,7 @@ class Trabajadores(Personas):
     @classmethod
     def get_stats(self, df_trabajadores, puesto = None) -> None:
 
-        if(puesto != None):
+        if(puesto is not None):
             result_df  = df_trabajadores[df_trabajadores['Position'] == puesto]
             print(f'Cantidad de trabajadores en el puesto {puesto}: {result_df.shape[0]}')
         else:
@@ -119,10 +122,13 @@ t = Trabajadores(
     puesto='IT',
     horario_trabajo='9-18',
     codigo_postal='B1713',
-    #id=944
+    id=944
 )
 
 # Metodo que retorna un dataframe a partir del archivo csv en la ruta pasada por parametro
 df_trabajadores = Trabajadores.create_df_from_csv(TRABAJADORES_CSV_ROUTE)
-#print(Trabajadores.get_from_df(df_trabajadores, categoria='C'))
 
+print(df_trabajadores.head())
+
+#print(Trabajadores.get_from_df(df_trabajadores, categoria='C'))
+#t.write_df(df_trabajadores)

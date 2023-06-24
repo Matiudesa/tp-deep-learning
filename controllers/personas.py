@@ -34,15 +34,15 @@ class Personas():
     def get_from_df(cls, df_mov, id=None, nombre=None, anios=None, generos=None) -> pd.DataFrame:
         query = []
 
-        if (id != None):
+        if (id is not None):
             query.append(f'id == {id} ')
-        if (nombre != None):
+        if (nombre is not None):
             query.append(f' `Full Name` == "{nombre}" ')
-        if (anios != None):
+        if (anios is not None):
             today = datetime.today()
             year_from_age = today.year - anios
             query.append(f' `year of birth` == {year_from_age} ')
-        if (generos != None):
+        if (generos is not None):
             query.append(f'Gender == "{generos}" ')
 
         if len(query) > 0:
@@ -76,11 +76,11 @@ class Personas():
     def get_stats(cls, df_personas, anios=None, generos=None) -> None:
         query = []
 
-        if(anios != None):
+        if(anios is not None):
             today = datetime.today()
             year_from_age = today.year - anios
             query.append(f' `year of birth` == {year_from_age} ')
-        if(generos != None):
+        if(generos is not None):
             query.append(f'Gender == "{generos}" ')
         
         if len(query) > 0:
@@ -140,6 +140,8 @@ class Personas():
     
 # Metodo que retorna un dataframe a partir del archivo csv en la ruta pasada por parametro
 df_personas = Personas.create_df_from_csv(PERSONAS_CSV_ROUTE)
+
+print(df_personas)
 
 p = Personas(
     fecha_nacimiento= 2000,
