@@ -1,8 +1,9 @@
 import pandas as pd
 from datetime import datetime
-
-class UserManagement:
-    def __init__(self, dataframe, csv_filename):
+from personas import Personas, PERSONAS_CSV_ROUTE
+class UserManagement(Personas):
+    def __init__(self, nombre, fecha_nacimiento, genero, codigo_postal, dataframe, csv_filename, id=None):
+        super().__init__(nombre, fecha_nacimiento, genero, codigo_postal, id)
         self.dataframe = dataframe
         self.csv_filename = csv_filename
 
@@ -25,7 +26,7 @@ class UserManagement:
     @classmethod
     def create_df_from_csv(cls, filename):
         df = pd.read_csv(filename)
-        df['Active Since'] = pd.to_datetime(df['Active Since'])
+        df['Active Since'] = pd.to_datetime(df['Active Since'].str[:10], format='%Y-%m-%d')
         return df
 
     @classmethod
@@ -100,4 +101,22 @@ csv_filename = 'data/usuarios.csv'
 df_usuarios = UserManagement.create_df_from_csv(csv_filename)
 
 # Obtener estadísticas de usuarios por ocupación y filtrar por año de nacimiento y cantidad de usuarios
-UserManagement.get_stats(df_usuarios, occupations=['technician', 'educator'], birth_year=1997, min_users=5)
+#UserManagement.get_stats(df_usuarios, occupations=['technician', 'educator'], birth_year=1997, min_users=5)
+
+user_manager = UserManagement(
+    nombre='John Doe',
+    fecha_nacimiento='1990-05-15',
+    genero='M',
+    codigo_postal='12345',
+    dataframe=df_usuarios,  # DataFrame existente
+    csv_filename=csv_filename  # Nombre del archivo CSV
+)
+
+'''
+user_manager.add_user(
+    id=944,
+    occupation='engineer',
+    active_since='2023-01-01'
+)
+'''
+user_manager.remove_user(id=944)
