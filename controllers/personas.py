@@ -8,16 +8,15 @@ PERSONAS_CSV_ROUTE = 'data/personas.csv'
 class Personas():
 
     # Constructo definiendo los atributos
-    def __init__(self, nombre, fecha_nacimiento, genero, codigo_postal, id = None):
+    def __init__(self, nombre, fecha_nacimiento, genero, codigo_postal, id = None) -> None:
         self.nombre = nombre
         self.fecha_nacimiento = fecha_nacimiento
         self.genero = genero
         self.codigo_postal = codigo_postal
         self.id = id
 
-
     # Dunder para imprimir atributos del objeto instanciado
-    def __repr__(self):
+    def __repr__(self) -> str:
         string = list()
         string.append(f'ID: {self.id}')
         string.append(f'Fecha nacimiento: {self.fecha_nacimiento}')
@@ -27,23 +26,23 @@ class Personas():
 
     #Metodo que retorna un dataframe a partir del archivo csv en la ruta pasada por parametro filename
     @classmethod
-    def create_df_from_csv(cls, filename):
+    def create_df_from_csv(cls, filename) -> pd.DataFrame:
         df_personas = pd.read_csv(filename)
         return df_personas
 
     @classmethod
-    def get_from_df(cls, df_mov, id=None, nombre=None, anios=None, generos=None):
+    def get_from_df(cls, df_mov, id=None, nombre=None, anios=None, generos=None) -> pd.DataFrame:
         query = []
 
-        if (id != None):
+        if (id is not None):
             query.append(f'id == {id} ')
-        if (nombre != None):
+        if (nombre is not None):
             query.append(f' `Full Name` == "{nombre}" ')
-        if (anios != None):
+        if (anios is not None):
             today = datetime.today()
             year_from_age = today.year - anios
             query.append(f' `year of birth` == {year_from_age} ')
-        if (generos != None):
+        if (generos is not None):
             query.append(f'Gender == "{generos}" ')
 
         if len(query) > 0:
@@ -57,15 +56,15 @@ class Personas():
 
     # Metodo  debe ser sobreescrito en las clases hijas, ya que crearemos un metodo 
     # para cada usuario o trabajadores que hereden de esta clase.
-    def write_df(self, df_personas, overwrite=False):
+    def write_df(self, df_personas, overwrite=False) -> None:
         
-        if (self.id != None):
+        if self.id is not None:
             if overwrite:
                 df_personas.loc[df_personas['id'] == self.id] = [self.id, self.nombre, self.fecha_nacimiento, self.genero, self.codigo_postal]
                 df_personas.to_csv(PERSONAS_CSV_ROUTE, index=False)
                 print("Se ha actualizado el registro personas.")
             else:
-                  raise ValueError(f'El ID {self.id} ya existe en el archivo.')
+                  raise ValueError(f'Habilite la sobreescritura si usted intenta modificar un registro con el ID.')
         else:
             self.id = df_personas['id'].max() + 1
             df_personas.loc[df_personas.shape[0]] = [self.id, self.nombre, self.fecha_nacimiento, self.genero, self.codigo_postal]
@@ -74,14 +73,14 @@ class Personas():
 
 
     @classmethod
-    def get_stats(cls, df_personas, anios=None, generos=None):
+    def get_stats(cls, df_personas, anios=None, generos=None) -> None:
         query = []
 
-        if(anios != None):
+        if(anios is not None):
             today = datetime.today()
             year_from_age = today.year - anios
             query.append(f' `year of birth` == {year_from_age} ')
-        if(generos != None):
+        if(generos is not None):
             query.append(f'Gender == "{generos}" ')
         
         if len(query) > 0:
@@ -119,7 +118,7 @@ class Personas():
 
     # Metodo que elimina un registro de personas en el archivo csv solamente cuando todos los atributos del objeto instanciado 
     # coinciden con los del registro   
-    def remove_from_df(self, df_personas):
+    def remove_from_df(self, df_personas) -> None:
        
         match = ( 
                   (df_personas['id'] == self.id) &
@@ -142,12 +141,15 @@ class Personas():
 # Metodo que retorna un dataframe a partir del archivo csv en la ruta pasada por parametro
 df_personas = Personas.create_df_from_csv(PERSONAS_CSV_ROUTE)
 
+print(df_personas)
+
 p = Personas(
     fecha_nacimiento= 2000,
     nombre = 'Lucas Martinez',
     genero='M',
     codigo_postal='B1713',
 )
+#p.write_df(df_personas)
 
 
 
