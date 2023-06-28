@@ -21,22 +21,29 @@ class Scores:
         string.append(f'Timestamp: {self.timestamp}')
         return "\n".join(string)
     
+    @classmethod
+    def create_df_from_csv(cls, filename) -> pd.DataFrame:
+        df_scores = pd.read_csv(filename)
+        df_scores["Date"] = df_scores["Date"].fillna('1900-01-01')
+        df_scores["Date"] = df_scores["Date"].apply(lambda x: datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
+        return df_scores
+    
     def write_df(self, df_scores, overwrite=False) -> None:
 
         df_peliculas = pd.read_csv(PELICULAS_CSV_ROUTE)
         df_usuarios = pd.read_csv(csv_filename)
 
-        if df_usuarios[df_usuarios['id'] == self.usuario_id].empty:
+        if df_usuarios.loc[df_usuarios['id'] == self.usuario_id].empty:
             print("El ID de usuario no existe.")
             return
         # Verificar que el ID de película existe en el DataFrame de películas
-        if df_peliculas[df_peliculas['id'] == self.pelicula_id].empty:
+        if df_peliculas.loc[df_peliculas['id'] == self.pelicula_id].empty:
             print("El ID de película no existe.")
             return
 
         # Si los IDs de usuario y película existen, proceder como antes
         if overwrite:
-            df_scores.loc[(df_scores['usuario_id'] == self.usuario_id) & (df_scores['pelicula_id'] == self.pelicula_id)] = [self.usuario_id, self.pelicula_id, self.puntuacion, self.timestamp]
+            df_scores.loc[(df_scores['user_id'] == self.usuario_id) & (df_scores['movie_id'] == self.pelicula_id)] = [self.usuario_id, self.pelicula_id, self.puntuacion, self.timestamp]
             df_scores.to_csv(SCORES_CSV_ROUTE, index=False)
         else:
             df_scores.loc[df_scores.shape[0]] = [self.usuario_id, self.pelicula_id, self.puntuacion, self.timestamp]
@@ -44,10 +51,23 @@ class Scores:
             print("Se ha creado el registro en trabajadores.")
 
     def remove_from_df(self, df_scores) -> None:
-        df_scores = df_scores.drop(df_scores[(df_scores['usuario_id'] == self.usuario_id) & (df_scores['pelicula_id'] == self.pelicula_id)].index)
+        df_scores = df_scores.drop(df_scores[(df_scores['user_id'] == self.usuario_id) & (df_scores['movie_id'] == self.pelicula_id)].index)
         df_scores.to_csv(SCORES_CSV_ROUTE, index=False)
         
-    
+
+df_scores = Scores.create_df_from_csv(SCORES_CSV_ROUTE)
+
+score = Scores(
+    usuario_id=1,
+    pelicula_id=1,
+    puntuacion=5,
+    timestamp=datetime.now()
+)
+
+score.write_df(df_scores, overwrite=True)
+
+
+
 
     
         
