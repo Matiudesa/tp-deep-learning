@@ -1,6 +1,7 @@
 import pandas as pd
 from datetime import datetime
 from personas import Personas, PERSONAS_CSV_ROUTE
+
 class UserManagement(Personas):
     def __init__(self, nombre, fecha_nacimiento, genero, codigo_postal, dataframe, csv_filename, id=None):
         super().__init__(nombre, fecha_nacimiento, genero, codigo_postal, id)

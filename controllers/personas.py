@@ -52,46 +52,11 @@ class Personas():
             result_df = df_mov
 
         return result_df
-
-
-    # Metodo  debe ser sobreescrito en las clases hijas, ya que crearemos un metodo 
-    # para cada usuario o trabajadores que hereden de esta clase.
-    def write_df(self, df_personas, overwrite=False) -> None:
-        
-        if self.id is not None:
-            if overwrite:
-                df_personas.loc[df_personas['id'] == self.id] = [self.id, self.nombre, self.fecha_nacimiento, self.genero, self.codigo_postal]
-                df_personas.to_csv(PERSONAS_CSV_ROUTE, index=False)
-                print("Se ha actualizado el registro personas.")
-            else:
-                  raise ValueError(f'Habilite la sobreescritura si usted intenta modificar un registro con el ID.')
-        else:
-            self.id = df_personas['id'].max() + 1
-            df_personas.loc[df_personas.shape[0]] = [self.id, self.nombre, self.fecha_nacimiento, self.genero, self.codigo_postal]
-            df_personas.to_csv(PERSONAS_CSV_ROUTE, index=False)
-            print("Se ha creado el registro en personas.")
-
-
+    
     @classmethod
     def get_stats(cls, df_personas, anios=None, generos=None) -> None:
-        query = []
-
-        if(anios is not None):
-            today = datetime.today()
-            year_from_age = today.year - anios
-            query.append(f' `year of birth` == {year_from_age} ')
-        if(generos is not None):
-            query.append(f'Gender == "{generos}" ')
-        
-        if len(query) > 0:
-            query_str = ' and '.join(query)
-            result_df = df_personas.query(query_str)
-        else:
-            result_df = df_personas
-
-        if result_df.empty:
-            print("No se encontraron usuarios que cumplan los requisitos.")
-            return
+        # Utlizo el metodo get_from_df para obtener un dataframe con los registros que coincidan con los parametros pasados
+        result_df = cls.get_from_df(df_personas, anios=anios, generos=generos)
 
         #Cantidad total de tuplas segun query (personas)
         print(f'Cantidad total de personas segun busqueda: {result_df.shape[0]}')
@@ -116,6 +81,27 @@ class Personas():
             plt.legend(loc='upper right')
             plt.show()
 
+
+
+    # Metodo  debe ser sobreescrito en las clases hijas, ya que crearemos un metodo 
+    # para cada usuario o trabajadores que hereden de esta clase.
+    def write_df(self, df_personas, overwrite=False) -> None:
+        
+        if self.id is not None:
+            if overwrite:
+                df_personas.loc[df_personas['id'] == self.id] = [self.id, self.nombre, self.fecha_nacimiento, self.genero, self.codigo_postal]
+                df_personas.to_csv(PERSONAS_CSV_ROUTE, index=False)
+                print("Se ha actualizado el registro personas.")
+            else:
+                  raise ValueError(f'Habilite la sobreescritura si usted intenta modificar un registro con el ID.')
+        else:
+            self.id = df_personas['id'].max() + 1
+            df_personas.loc[df_personas.shape[0]] = [self.id, self.nombre, self.fecha_nacimiento, self.genero, self.codigo_postal]
+            df_personas.to_csv(PERSONAS_CSV_ROUTE, index=False)
+            print("Se ha creado el registro en personas.")
+
+
+    
     # Metodo que elimina un registro de personas en el archivo csv solamente cuando todos los atributos del objeto instanciado 
     # coinciden con los del registro   
     def remove_from_df(self, df_personas) -> None:
@@ -141,7 +127,9 @@ class Personas():
 # Metodo que retorna un dataframe a partir del archivo csv en la ruta pasada por parametro
 df_personas = Personas.create_df_from_csv(PERSONAS_CSV_ROUTE)
 
-print(df_personas)
+
+# estadisticas, si no pasamos nada, no plotea, si pasamos nos devuelve un print
+Personas.get_stats(df_personas)
 
 p = Personas(
     fecha_nacimiento= 2000,

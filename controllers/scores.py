@@ -43,7 +43,11 @@ class Scores:
             df_scores.to_csv(SCORES_CSV_ROUTE, index=False)
             print("Se ha creado el registro en trabajadores.")
 
+    def remove_from_df(self, df_scores) -> None:
+        df_scores = df_scores.drop(df_scores[(df_scores['usuario_id'] == self.usuario_id) & (df_scores['pelicula_id'] == self.pelicula_id)].index)
+        df_scores.to_csv(SCORES_CSV_ROUTE, index=False)
         
+    
 
     
         
