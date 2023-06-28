@@ -129,7 +129,7 @@ df_personas = Personas.create_df_from_csv(PERSONAS_CSV_ROUTE)
 
 
 # estadisticas, si no pasamos nada, no plotea, si pasamos nos devuelve un print
-Personas.get_stats(df_personas)
+#Personas.get_stats(df_personas)
 
 p = Personas(
     fecha_nacimiento= 2000,

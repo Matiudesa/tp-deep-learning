@@ -12,14 +12,15 @@ class Pelicula:
         self.IMDB_URL = IMDB_URL
         self.generos = generos
         self.id = id
+
     def __repr__(self):
         strings = list()
         strings.append(f'Nombre: {self.nombre}')
         strings.append(f'Fecha de estreno: {self.fecha_estreno}')
         strings.append(f'Géneros: {self.generos}')
+        strings.append(f'IMDB URL: {self.IMDB_URL}')
         strings.append(f'ID: {self.id}')
         return "\n".join(strings)
-
 
     @classmethod
     def create_df_from_csv(cls, filename):
@@ -143,7 +144,7 @@ class Pelicula:
 #Dataframe
 df_mov = Pelicula.create_df_from_csv(PELICULAS_CSV_ROUTE)
 
-Pelicula.get_stats(df_mov, anios=[1994, 1995], generos=['Action'])
+#Pelicula.get_stats(df_mov, anios=[1994, 1995], generos=['Action'])
 
 #Crear una instancia de la clase Pelicula
 p = Pelicula( 
@@ -152,6 +153,7 @@ p = Pelicula(
      generos=['Sci-Fi', 'Action', 'Adventure', 'Fantasy']
 )
 
+print(p)
 
 
 
