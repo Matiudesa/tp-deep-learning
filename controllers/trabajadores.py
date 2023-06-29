@@ -29,6 +29,7 @@ class Trabajadores(Personas):
         df_trabajadores["Start Date"] = df_trabajadores["Start Date"].fillna('1-Jan-1900')
         df_trabajadores["Start Date"] = df_trabajadores["Start Date"].apply(lambda x: datetime.strptime(x, '%Y-%m-%d'))
         return df_trabajadores
+    
     @classmethod
     def get_from_df(cls, df_trabajadores , fecha_alta=None, puesto=None, horario_trabajo=None, categoria=None) -> pd.DataFrame:
         query = []
@@ -62,8 +63,6 @@ class Trabajadores(Personas):
         plt.bar(cant_por_puesto.index, cant_por_puesto.values)
         plt.title('Cantidad de trabajadores por puesto')
         plt.show()
-
-
 
     def write_df(self, df_trabajadores, overwrite = False) -> None:  
         
@@ -132,7 +131,7 @@ df_trabajadores = Trabajadores.create_df_from_csv(TRABAJADORES_CSV_ROUTE)
 #Trabajadores.get_stats(df_trabajadores, puesto='IT')
 
 # Return del metodo __repr__
-print(t)
+# print(t)
 
 #print(Trabajadores.get_from_df(df_trabajadores, categoria='C'))
 #t.write_df(df_trabajadores)

@@ -96,10 +96,10 @@ class UserManagement(Personas):
 
 
 # Nombre del archivo CSV
-csv_filename = 'data/usuarios.csv'
+USERS_CSV_ROUTE = 'data/usuarios.csv'
 
 # Cargar el DataFrame existente desde el archivo CSV
-df_usuarios = UserManagement.create_df_from_csv(csv_filename)
+df_usuarios = UserManagement.create_df_from_csv(USERS_CSV_ROUTE)
 
 # Obtener estadísticas de usuarios por ocupación y filtrar por año de nacimiento y cantidad de usuarios
 #UserManagement.get_stats(df_usuarios, occupations=['technician', 'educator'], birth_year=1997, min_users=5)
@@ -110,7 +110,7 @@ user_manager = UserManagement(
     genero='M',
     codigo_postal='12345',
     dataframe=df_usuarios,  # DataFrame existente
-    csv_filename=csv_filename  # Nombre del archivo CSV
+    csv_filename=USERS_CSV_ROUTE  # Nombre del archivo CSV
 )
 
 '''
@@ -120,4 +120,4 @@ user_manager.add_user(
     active_since='2023-01-01'
 )
 '''
-user_manager.remove_user(id=944)
+# user_manager.remove_user(id=944)

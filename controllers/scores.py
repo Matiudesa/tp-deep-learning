@@ -1,5 +1,5 @@
 from datetime import datetime
-from users import csv_filename
+from users import USERS_CSV_ROUTE
 from peliculas import PELICULAS_CSV_ROUTE
 import pandas as pd
 
@@ -50,7 +50,7 @@ class Scores:
     def write_df(self, df_scores, overwrite=False) -> None:
 
         df_peliculas = pd.read_csv(PELICULAS_CSV_ROUTE)
-        df_usuarios = pd.read_csv(csv_filename)
+        df_usuarios = pd.read_csv(USERS_CSV_ROUTE)
 
         if df_usuarios.loc[df_usuarios['id'] == self.usuario_id].empty:
             print("El ID de usuario no existe.")
@@ -136,7 +136,7 @@ print(movie_avg)
 
 
 # Obtener del dataframe
-print(Scores.get_from_df(df_scores, usuario_id=2))
+# print(Scores.get_from_df(df_scores, usuario_id=2))
 
 # Eliminar mediante matcheos
 # score.remove_from_df(df_scores)
