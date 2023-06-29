@@ -3,7 +3,8 @@ from datetime import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 
-TRABAJADORES_CSV_ROUTE = 'data/trabajadores.csv'
+## PARA EJECUTAR EL ARCHIVO REEMPLAZAR RUTA POR data/trabajadores.csv"
+TRABAJADORES_CSV_ROUTE = '../data/trabajadores.csv'
 
 class Trabajadores(Personas):
 
@@ -31,16 +32,22 @@ class Trabajadores(Personas):
         return df_trabajadores
     
     @classmethod
-    def get_from_df(cls, df_trabajadores , fecha_alta=None, puesto=None, horario_trabajo=None, categoria=None) -> pd.DataFrame:
+    def get_from_df(cls, df_trabajadores , fechas = None, puesto=None, horario_trabajo=None, categoria=None) -> pd.DataFrame:
         query = []
 
         if (puesto is not None):
-            query.append(f' `Position` == "{puesto}" ')
+            query.append(f' Position == "{puesto}" ')
         if (categoria is not None):
             query.append(f' Category == "{categoria}" ')
         if (horario_trabajo is not None):
             query.append(f' `Working Hours` == "{horario_trabajo}" ')
-
+        if (fechas is not None):
+            assert len(fechas) == 2, 'Debe ingresar una lista de dos fechas'
+            desde = fechas[0]
+            hasta = fechas[1]
+            if hasta == desde:
+                hasta = datetime(fechas[1],12,31)
+            query.append(f' `Start Date` >= "{desde}" and `Start Date` <= "{hasta}" ')
         if len(query) > 0:
             query_str = ' and '.join(query)
             result_df = df_trabajadores.query(query_str)
@@ -50,17 +57,18 @@ class Trabajadores(Personas):
         return result_df
     
     @classmethod
-    def get_stats(self, df_trabajadores, puesto = None) -> None:
+    def get_stats(cls, df_trabajadores, puesto = None) -> None:
 
         if(puesto is not None):
-            result_df  = df_trabajadores[df_trabajadores['Position'] == puesto]
+            result_df = df_trabajadores[df_trabajadores['Position'] == puesto]
             print(f'Cantidad de trabajadores en el puesto {puesto}: {result_df.shape[0]}')
         else:
             result_df = df_trabajadores
             print(f'Cantidad de trabajadores: {result_df.shape[0]}')
 
         cant_por_puesto = result_df['Position'].value_counts()
-        plt.bar(cant_por_puesto.index, cant_por_puesto.values)
+        plt.figure(figsize=(10,6))
+        plt.pie(cant_por_puesto.values, labels=cant_por_puesto.index, autopct='%1.1f%%')
         plt.title('Cantidad de trabajadores por puesto')
         plt.show()
 
@@ -72,7 +80,7 @@ class Trabajadores(Personas):
             df_personas = pd.read_csv(PERSONAS_CSV_ROUTE)
             if df_personas[df_personas['id'] == self.id].empty:
                 raise ValueError(f'El ID {self.id} no existe en el archivo de personas.')
-
+            
 
             if overwrite:
                 # Antes de intentar sobrescribir un registro, verificamos que el id exista ya en el dataframe de trabajadores
@@ -112,21 +120,22 @@ class Trabajadores(Personas):
             print("No se ha encontrado el registro.")
 
 # Objeto instanciado para probar el funcionamiento de la clase
-t = Trabajadores(
-    fecha_alta= '2005/05/10',
-    fecha_nacimiento= '2000',
-    nombre = 'Lucas Martinez',
-    genero='H',
-    categoria='A',
-    puesto='IT',
-    horario_trabajo='9-18',
-    codigo_postal='B1713',
-    id=944
-)
+
+# t = Trabajadores(
+#     fecha_alta= datetime(1995, 1, 1),
+#     fecha_nacimiento= '2000',
+#     nombre = 'Lucas Martinez',
+#     genero='H',
+#     categoria='A',
+#     puesto='IT',
+#     horario_trabajo='9-18',
+#     codigo_postal='B1713',
+#     id=944
+# )
 
 # Metodo que retorna un dataframe a partir del archivo csv en la ruta pasada por parametro
-df_trabajadores = Trabajadores.create_df_from_csv(TRABAJADORES_CSV_ROUTE)
-
+#df_trabajadores = Trabajadores.create_df_from_csv(TRABAJADORES_CSV_ROUTE)
+#print(Trabajadores.get_from_df(df_trabajadores, puesto='IT'))
 # Estadisticas de los trabajadores
 #Trabajadores.get_stats(df_trabajadores, puesto='IT')
 

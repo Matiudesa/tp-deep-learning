@@ -1,8 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import datetime, date
+from datetime import datetime
 
-PELICULAS_CSV_ROUTE = 'data/peliculas.csv'
+## PARA EJECUTAR EL ARCHIVO REEMPLAZAR RUTA POR data/peliculas.csv"
+PELICULAS_CSV_ROUTE = "../data/peliculas.csv"
 
 class Pelicula:
 
@@ -33,18 +34,18 @@ class Pelicula:
     def get_from_df(cls, df_mov, id=None, nombre = None, anios = None, generos = None) -> pd.DataFrame:
         query = []
 
-        if (id is not None):
+        if id is not None:
             query.append(f' id == {id} ')
-        if (nombre is not None):
+        if nombre is not None:
             query.append(f' Name == "{nombre}" ')
-        if (anios is not None):
+        if anios is not None:
             assert len(anios) == 2, 'El rango de años debe tener dos elementos'
             desde = datetime(anios[0],1,1)
             hasta = datetime(anios[1],1,1)
-            if(hasta == desde):
+            if hasta == desde:
                 hasta = datetime(anios[1],12,31)
             query.append(f' `Release Date` >= "{desde}" and `Release Date` <= "{hasta}" ')
-        if (generos is not None):
+        if generos is not None:
             for genero in generos:
                 query.append(f' {genero} == 1 ')   
 
@@ -71,11 +72,11 @@ class Pelicula:
             print(pelicula_nueva)
 
             # Graficas
-            df_mov['Release Year'] = df_mov['Release Date'].dt.year
+            df_mov['Release Date'] = df_mov['Release Date'].dt.year
 
             plt.figure(figsize=(16,6))
             plt.subplot(121)
-            df_mov['Release Year'].value_counts().sort_index().plot(kind='line', marker='o')
+            df_mov['Release Date'].value_counts().sort_index().plot(kind='line', marker='o')
             plt.xticks(rotation=45)
             plt.title('Películas por año')
             plt.xlabel('Año')
@@ -92,13 +93,13 @@ class Pelicula:
 
     
     def write_df(self, df_mov, overwrite=False):
-         
+        releaseDate = datetime.strptime(self.fecha_estreno, '%d-%b-%Y')
         if self.id:
             if self.id in df_mov['id'].values:
                 if overwrite:
                     row_index = df_mov[df_mov['id'] == self.id].index[0]
                     df_mov.at[row_index, 'Name'] = self.nombre
-                    df_mov.at[row_index, 'Release Date'] = self.fecha_estreno
+                    df_mov.at[row_index, 'Release Date'] = releaseDate
                     df_mov.at[row_index, 'IMDB URL'] = self.IMDB_URL
                     for column in df_mov.columns[4:]:
                         df_mov.at[row_index, column] = 1 if column in self.generos else 0
@@ -108,11 +109,10 @@ class Pelicula:
                 raise ValueError(f'La id {self.id} no se encuentra en el DataFrame.')
         else:
             new_id = df_mov['id'].max() + 1
-            new_row = pd.DataFrame([{'id': new_id, 'Name': self.nombre, 'Release Date': self.fecha_estreno, 'IMDB URL': self.IMDB_URL}])
+            new_row = pd.DataFrame([{'id': new_id, 'Name': self.nombre, 'Release Date': releaseDate, 'IMDB URL': self.IMDB_URL}])
             for column in df_mov.columns[4:]:
                 new_row[column] = 1 if column in self.generos else 0
             df_mov = pd.concat([df_mov, new_row], ignore_index=True)
-        df_mov['Release Date'] = df_mov['Release Date'].dt.strftime('%d-%b-%Y')
         df_mov.to_csv(PELICULAS_CSV_ROUTE, index=False)
         print('Se ha escrito el DataFrame en el archivo CSV')
 
@@ -141,17 +141,18 @@ class Pelicula:
         
       
            
-#Dataframe
-df_mov = Pelicula.create_df_from_csv(PELICULAS_CSV_ROUTE)
+# #Dataframe
+# df_mov = Pelicula.create_df_from_csv(PELICULAS_CSV_ROUTE)
 
-#Pelicula.get_stats(df_mov, anios=[1994, 1995], generos=['Action'])
+# Pelicula.get_stats(df_mov, anios=[1994, 1995], generos=['Action'])
 
-#Crear una instancia de la clase Pelicula
-p = Pelicula( 
-     nombre='Avatar', 
-     fecha_estreno=datetime.strptime('10-Jan-2015', '%d-%b-%Y'), 
-     generos=['Sci-Fi', 'Action', 'Adventure', 'Fantasy']
-)
+# Crear una instancia de la clase Pelicula
+# p = Pelicula( 
+#        nombre='Avatar', 
+#        fecha_estreno=datetime.strptime('10-Jan-2015', '%d-%b-%Y'), 
+#        generos=['Sci-Fi', 'Action', 'Adventure', 'Fantasy']
+#   )
+# p.write_df(df_mov)
 
 
 

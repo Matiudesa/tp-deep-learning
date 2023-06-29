@@ -12,4 +12,4 @@ def save_all():
     print("Se han guardado todos los archivos CSV.")
 
 
-save_all()
+# save_all()
