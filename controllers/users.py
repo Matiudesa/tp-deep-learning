@@ -35,13 +35,6 @@ class UserManagement(Personas):
                          raise ValueError(f'El ID {id} ya existe en el archivo de usuarios.')
         else:
               raise ValueError('No se puede crear un trabajador sin contar con el ID de persona.')
-        
-        
-    def remove_user(self, id):
-        self.dataframe = self.dataframe[self.dataframe['id'] != id]
-
-        # Guardar los cambios en el archivo CSV
-        self.dataframe.to_csv(self.csv_filename, index=False)
 
     @classmethod
     def create_df_from_csv(cls, filename):
@@ -105,13 +98,15 @@ class UserManagement(Personas):
                 print(f"\nLa cantidad de usuarios ({users_count}) no cumple el requisito mínimo de {min_users} usuarios.")
 
     def remove_from_df(self, df):
-        matching_rows = df[df['id'] == self.id]
-
+        matching_rows = df['id'] == self.id
+       
         if matching_rows.empty:
             raise ValueError("No se encontró el usuario en el DataFrame.")
 
-        df = df.drop(matching_rows.index)
-        return df
+        row_index = df[matching_rows].index[0]
+        df.drop(row_index, inplace=True)
+        df.to_csv(self.csv_filename, index=False)
+        print('El usuario ha sido eliminado del DataFrame')
 
 
 # Nombre del archivo CSV
@@ -124,14 +119,15 @@ df_usuarios = UserManagement.create_df_from_csv(USERS_CSV_ROUTE)
 # Obtener estadísticas de usuarios por ocupación y filtrar por año de nacimiento y cantidad de usuarios
 #UserManagement.get_stats(df_usuarios, occupations=['technician', 'educator'], birth_year=1997, min_users=5)
 
-user_manager = UserManagement(
-    nombre='John Doe',
-    fecha_nacimiento='1990-05-15',
-    genero='M',
-    codigo_postal='12345',
-    dataframe=df_usuarios,  # DataFrame existente
-    csv_filename=USERS_CSV_ROUTE  # Nombre del archivo CSV
-)
+# user_manager = UserManagement(
+#     nombre='John Doe',
+#     fecha_nacimiento='1990-05-15',
+#     genero='M',
+#     codigo_postal='12345',
+#     dataframe=df_usuarios,  # DataFrame existente
+#     csv_filename=USERS_CSV_ROUTE,  # Nombre del archivo CSV
+#     id=943
+# )
 
 '''
 user_manager.add_user(
@@ -140,4 +136,4 @@ user_manager.add_user(
     active_since='2023-01-01'
 )
 '''
-# user_manager.remove_user(id=944)
+#user_manager.remove_from_df(df_usuarios)

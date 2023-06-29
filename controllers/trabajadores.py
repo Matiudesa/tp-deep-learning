@@ -120,20 +120,21 @@ class Trabajadores(Personas):
             print("No se ha encontrado el registro.")
 
 # Objeto instanciado para probar el funcionamiento de la clase
-t = Trabajadores(
-    fecha_alta= datetime(1995, 1, 1),
-    fecha_nacimiento= '2000',
-    nombre = 'Lucas Martinez',
-    genero='H',
-    categoria='A',
-    puesto='IT',
-    horario_trabajo='9-18',
-    codigo_postal='B1713',
-    id=944
-)
+
+# t = Trabajadores(
+#     fecha_alta= datetime(1995, 1, 1),
+#     fecha_nacimiento= '2000',
+#     nombre = 'Lucas Martinez',
+#     genero='H',
+#     categoria='A',
+#     puesto='IT',
+#     horario_trabajo='9-18',
+#     codigo_postal='B1713',
+#     id=944
+# )
 
 # Metodo que retorna un dataframe a partir del archivo csv en la ruta pasada por parametro
-df_trabajadores = Trabajadores.create_df_from_csv(TRABAJADORES_CSV_ROUTE)
+#df_trabajadores = Trabajadores.create_df_from_csv(TRABAJADORES_CSV_ROUTE)
 #print(Trabajadores.get_from_df(df_trabajadores, puesto='IT'))
 # Estadisticas de los trabajadores
 #Trabajadores.get_stats(df_trabajadores, puesto='IT')

@@ -142,17 +142,17 @@ class Pelicula:
         
       
            
-#Dataframe
-df_mov = Pelicula.create_df_from_csv(PELICULAS_CSV_ROUTE)
+# #Dataframe
+# df_mov = Pelicula.create_df_from_csv(PELICULAS_CSV_ROUTE)
 
-#Pelicula.get_stats(df_mov, anios=[1994, 1995], generos=['Action'])
+# Pelicula.get_stats(df_mov, anios=[1994, 1995], generos=['Action'])
 
-#Crear una instancia de la clase Pelicula
-p = Pelicula( 
-     nombre='Avatar', 
-     fecha_estreno=datetime.strptime('10-Jan-2015', '%d-%b-%Y'), 
-     generos=['Sci-Fi', 'Action', 'Adventure', 'Fantasy']
-)
+# Crear una instancia de la clase Pelicula
+# p = Pelicula( 
+#      nombre='Avatar', 
+#      fecha_estreno=datetime.strptime('10-Jan-2015', '%d-%b-%Y'), 
+#      generos=['Sci-Fi', 'Action', 'Adventure', 'Fantasy']
+# )
 
 
 

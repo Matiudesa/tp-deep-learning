@@ -135,18 +135,18 @@ class Personas:
 
     
 # Metodo que retorna un dataframe a partir del archivo csv en la ruta pasada por parametro
-df_personas = Personas.create_df_from_csv(PERSONAS_CSV_ROUTE)
+# df_personas = Personas.create_df_from_csv(PERSONAS_CSV_ROUTE)
 
 
 # estadisticas, si no pasamos nada, no plotea, si pasamos nos devuelve un print
 #Personas.get_stats(df_personas)
 
-p = Personas(
-    fecha_nacimiento= datetime(1950, 1, 1),
-    nombre = 'Lucas Martinez',
-    genero='M',
-    codigo_postal='24151',
-)
+# p = Personas(
+#     fecha_nacimiento= datetime(1950, 1, 1),
+#     nombre = 'Lucas Martinez',
+#     genero='M',
+#     codigo_postal='24151',
+# )
 #p.write_df(df_personas)
 
 

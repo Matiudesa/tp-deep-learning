@@ -118,14 +118,14 @@ class Scores:
         return int(movie_ratings.mean())
 
 
-df_scores = Scores.create_df_from_csv(SCORES_CSV_ROUTE)
+# df_scores = Scores.create_df_from_csv(SCORES_CSV_ROUTE)
 
-score = Scores(
-    usuario_id=12,
-    pelicula_id=203,
-    puntuacion=1,
-    timestamp=datetime.now()
-    )
+# score = Scores(
+#     usuario_id=12,
+#     pelicula_id=203,
+#     puntuacion=1,
+#     timestamp=datetime.now()
+#     )
 
 #score.write_df(df_scores, overwrite=True)
 #score.remove_from_df(df_scores)
