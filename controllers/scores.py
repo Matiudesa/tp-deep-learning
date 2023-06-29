@@ -22,7 +22,7 @@ class Scores:
         return "\n".join(string)
 
     @classmethod
-    def create_df_from_csv(cls, filename) -> pd.DataFrame:
+    def create_df_from_csv(cls, filename: str) -> pd.DataFrame:
         df_scores = pd.read_csv(filename)
         df_scores["Date"] = df_scores["Date"].fillna('1900-01-01')
         df_scores["Date"] = df_scores["Date"].apply(lambda x: datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
@@ -97,17 +97,17 @@ class Scores:
         # df_scores = df_scores.drop(df_scores[(df_scores['user_id'] == self.usuario_id) & (df_scores['movie_id'] == self.pelicula_id)].index)
         # df_scores.to_csv(SCORES_CSV_ROUTE, index=False)
 
-    def get_user_avg(self, df_scores):
+    def get_user_avg(self, df_scores) -> pd.DataFrame:
         return df_scores.groupby('user_id')['rating'].mean()
 
-    def get_movie_avg(self, df_scores):
+    def get_movie_avg(self, df_scores) -> pd.DataFrame:
         return df_scores.groupby('movie_id')['rating'].mean()
 
-    def get_user_avg_by_id(self, df_scores, user_id):
+    def get_user_avg_by_id(self, df_scores, user_id) -> pd.DataFrame:
         user_ratings = df_scores[df_scores['user_id'] == user_id]['rating']
         return user_ratings.mean()
 
-    def get_movie_avg_by_id(self, df_scores, movie_id):
+    def get_movie_avg_by_id(self, df_scores, movie_id) -> int:
         movie_ratings = df_scores[df_scores['movie_id'] == movie_id]['rating']
         return int(movie_ratings.mean())
 
@@ -116,10 +116,13 @@ df_scores = Scores.create_df_from_csv(SCORES_CSV_ROUTE)
 
 score = Scores(
     usuario_id=12,
-    pelicula_id=45,
-    puntuacion=4,
+    pelicula_id=203,
+    puntuacion=1,
     timestamp=datetime.now()
     )
+
+#score.write_df(df_scores, overwrite=True)
+#score.remove_from_df(df_scores)
 '''
 user_avg = score.get_user_avg(df_scores)
 print("Calificación promedio por usuario:")

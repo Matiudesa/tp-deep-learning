@@ -153,7 +153,6 @@ p = Pelicula(
      generos=['Sci-Fi', 'Action', 'Adventure', 'Fantasy']
 )
 
-print(p)
 
 
 
