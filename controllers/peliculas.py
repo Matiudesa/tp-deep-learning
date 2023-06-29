@@ -33,18 +33,18 @@ class Pelicula:
     def get_from_df(cls, df_mov, id=None, nombre = None, anios = None, generos = None) -> pd.DataFrame:
         query = []
 
-        if (id is not None):
+        if id is not None:
             query.append(f' id == {id} ')
-        if (nombre is not None):
+        if nombre is not None:
             query.append(f' Name == "{nombre}" ')
-        if (anios is not None):
+        if anios is not None:
             assert len(anios) == 2, 'El rango de años debe tener dos elementos'
             desde = datetime(anios[0],1,1)
             hasta = datetime(anios[1],1,1)
-            if(hasta == desde):
+            if hasta == desde:
                 hasta = datetime(anios[1],12,31)
             query.append(f' `Release Date` >= "{desde}" and `Release Date` <= "{hasta}" ')
-        if (generos is not None):
+        if generos is not None:
             for genero in generos:
                 query.append(f' {genero} == 1 ')   
 

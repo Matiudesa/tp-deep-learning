@@ -75,7 +75,7 @@ class Scores:
             df_scores.loc[df_scores.shape[0]] = [df_scores.shape[0], self.usuario_id, self.pelicula_id, self.puntuacion, self.timestamp]
             df_scores.to_csv(SCORES_CSV_ROUTE, index=False)
             print(f'{self.puntuacion} puntos para la película {df_peliculas.loc[df_peliculas["id"] == self.pelicula_id]["Name"].values[0]}')
-
+    
     def remove_from_df(self, df_scores) -> None:
 
         # matcheamos todas las propiedades del objeto
@@ -97,17 +97,22 @@ class Scores:
         # df_scores = df_scores.drop(df_scores[(df_scores['user_id'] == self.usuario_id) & (df_scores['movie_id'] == self.pelicula_id)].index)
         # df_scores.to_csv(SCORES_CSV_ROUTE, index=False)
 
-    def get_user_avg(self, df_scores) -> pd.DataFrame:
+    @staticmethod
+    def get_user_avg(df_scores) -> pd.DataFrame:
         return df_scores.groupby('user_id')['rating'].mean()
 
-    def get_movie_avg(self, df_scores) -> pd.DataFrame:
+    @staticmethod
+    def get_movie_avg(df_scores) -> pd.DataFrame:
         return df_scores.groupby('movie_id')['rating'].mean()
 
-    def get_user_avg_by_id(self, df_scores, user_id) -> pd.DataFrame:
+
+    @staticmethod
+    def get_user_avg_by_id(df_scores, user_id) -> pd.DataFrame:
         user_ratings = df_scores[df_scores['user_id'] == user_id]['rating']
         return user_ratings.mean()
 
-    def get_movie_avg_by_id(self, df_scores, movie_id) -> int:
+    @staticmethod
+    def get_movie_avg_by_id(df_scores, movie_id) -> int:
         movie_ratings = df_scores[df_scores['movie_id'] == movie_id]['rating']
         return int(movie_ratings.mean())
 

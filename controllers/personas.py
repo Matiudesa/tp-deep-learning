@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 
 PERSONAS_CSV_ROUTE = 'data/personas.csv'
 
-class Personas():
+class Personas:
 
     # Constructo definiendo los atributos
     def __init__(self, nombre, fecha_nacimiento, genero, codigo_postal, id = None) -> None:
@@ -34,15 +34,15 @@ class Personas():
     def get_from_df(cls, df_mov, id=None, nombre=None, anios=None, generos=None) -> pd.DataFrame:
         query = []
 
-        if (id is not None):
+        if id is not None:
             query.append(f'id == {id} ')
-        if (nombre is not None):
+        if nombre is not None:
             query.append(f' `Full Name` == "{nombre}" ')
-        if (anios is not None):
+        if anios is not None:
             today = datetime.today()
             year_from_age = today.year - anios
             query.append(f' `year of birth` == {year_from_age} ')
-        if (generos is not None):
+        if generos is not None:
             query.append(f'Gender == "{generos}" ')
 
         if len(query) > 0:

@@ -50,10 +50,10 @@ class Trabajadores(Personas):
         return result_df
     
     @classmethod
-    def get_stats(self, df_trabajadores, puesto = None) -> None:
+    def get_stats(cls, df_trabajadores, puesto = None) -> None:
 
         if(puesto is not None):
-            result_df  = df_trabajadores[df_trabajadores['Position'] == puesto]
+            result_df = df_trabajadores[df_trabajadores['Position'] == puesto]
             print(f'Cantidad de trabajadores en el puesto {puesto}: {result_df.shape[0]}')
         else:
             result_df = df_trabajadores
