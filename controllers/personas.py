@@ -1,9 +1,9 @@
-from abc import ABC
 import pandas as pd
 from datetime import datetime
 from matplotlib import pyplot as plt
 
-PERSONAS_CSV_ROUTE = 'data/personas.csv'
+## PARA EJECUTAR EL ARCHIVO REEMPLAZAR RUTA POR data/personas.csv"
+PERSONAS_CSV_ROUTE = '../data/personas.csv'
 
 class Personas:
 
@@ -23,6 +23,12 @@ class Personas:
         string.append(f'Genero: {self.genero}')
         string.append(f'Codigo postal: {self.codigo_postal}')
         return "\n".join(string)
+
+    def get_age(self) -> int:
+        # Metodo que retorna el año de nacimiento a partir de la fecha de nacimiento
+        today = datetime.today()
+        year_from_age = today.year - self.fecha_nacimiento.year
+        return year_from_age
 
     #Metodo que retorna un dataframe a partir del archivo csv en la ruta pasada por parametro filename
     @classmethod
@@ -87,16 +93,19 @@ class Personas:
     # para cada usuario o trabajadores que hereden de esta clase.
     def write_df(self, df_personas, overwrite=False) -> None:
         
+        edad = self.get_age()
+
+
         if self.id is not None:
             if overwrite:
-                df_personas.loc[df_personas['id'] == self.id] = [self.id, self.nombre, self.fecha_nacimiento, self.genero, self.codigo_postal]
+                df_personas.loc[df_personas['id'] == self.id] = [self.id, self.nombre, edad, self.genero, self.codigo_postal]
                 df_personas.to_csv(PERSONAS_CSV_ROUTE, index=False)
                 print("Se ha actualizado el registro personas.")
             else:
                   raise ValueError(f'Habilite la sobreescritura si usted intenta modificar un registro con el ID.')
         else:
             self.id = df_personas['id'].max() + 1
-            df_personas.loc[df_personas.shape[0]] = [self.id, self.nombre, self.fecha_nacimiento, self.genero, self.codigo_postal]
+            df_personas.loc[df_personas.shape[0]] = [self.id, self.nombre, edad, self.genero, self.codigo_postal]
             df_personas.to_csv(PERSONAS_CSV_ROUTE, index=False)
             print("Se ha creado el registro en personas.")
 
@@ -105,11 +114,12 @@ class Personas:
     # Metodo que elimina un registro de personas en el archivo csv solamente cuando todos los atributos del objeto instanciado 
     # coinciden con los del registro   
     def remove_from_df(self, df_personas) -> None:
-       
+        
+        edad = self.get_age()
         match = ( 
                   (df_personas['id'] == self.id) &
                   (df_personas['Full Name'] == self.nombre) &
-                  (df_personas['year of birth'] == self.fecha_nacimiento) &
+                  (df_personas['year of birth'] == edad) &
                   (df_personas['Gender'] == self.genero) &
                   (df_personas['Zip Code'] == self.codigo_postal)
                 )
@@ -132,10 +142,10 @@ df_personas = Personas.create_df_from_csv(PERSONAS_CSV_ROUTE)
 #Personas.get_stats(df_personas)
 
 p = Personas(
-    fecha_nacimiento= 2000,
+    fecha_nacimiento= datetime(1950, 1, 1),
     nombre = 'Lucas Martinez',
     genero='M',
-    codigo_postal='B1713',
+    codigo_postal='24151',
 )
 #p.write_df(df_personas)
 

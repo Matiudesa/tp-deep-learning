@@ -1,8 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import datetime, date
+from datetime import datetime
 
-PELICULAS_CSV_ROUTE = 'data/peliculas.csv'
+## PARA EJECUTAR EL ARCHIVO REEMPLAZAR RUTA POR data/peliculas.csv"
+PELICULAS_CSV_ROUTE = "../data/peliculas.csv"
 
 class Pelicula:
 
@@ -152,6 +153,7 @@ p = Pelicula(
      fecha_estreno=datetime.strptime('10-Jan-2015', '%d-%b-%Y'), 
      generos=['Sci-Fi', 'Action', 'Adventure', 'Fantasy']
 )
+
 
 
 

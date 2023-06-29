@@ -3,7 +3,8 @@ from users import USERS_CSV_ROUTE
 from peliculas import PELICULAS_CSV_ROUTE
 import pandas as pd
 
-SCORES_CSV_ROUTE = 'data/scores.csv'
+## PARA EJECUTAR EL ARCHIVO REEMPLAZAR RUTA POR data/scores.csv"
+SCORES_CSV_ROUTE = '../data/scores.csv'
 
 class Scores:
 

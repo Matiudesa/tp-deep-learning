@@ -1,5 +1,4 @@
 import pandas as pd
-from datetime import datetime
 from personas import Personas, PERSONAS_CSV_ROUTE
 
 class UserManagement(Personas):
@@ -11,13 +10,33 @@ class UserManagement(Personas):
     def __repr__(self):
         return self.dataframe.to_string(index=False)
 
-    def add_user(self, id, occupation, active_since):
-        new_user = pd.DataFrame([[id, occupation, active_since]], columns=self.dataframe.columns)
-        self.dataframe = pd.concat([self.dataframe, new_user], ignore_index=True)
+    def add_user(self, id, occupation, active_since, overwrite=False):
+        if id is not None:
+            df_personas = pd.read_csv(PERSONAS_CSV_ROUTE)
+            if df_personas[df_personas['id'] == id].empty:
+                        raise ValueError(f'El ID {self.id} no existe en el archivo de personas.')
 
-        # Guardar los cambios en el archivo CSV
-        self.dataframe.to_csv(self.csv_filename, index=False)
-
+            if overwrite:
+                    if not self.dataframe[self.dataframe['id'] == id].empty:
+                        self.dataframe.loc[self.dataframe['id'] == id] = [id, occupation, active_since]
+                        self.dataframe.to_csv(self.csv_filename, index=False)
+                        print( f'El usuario con ID {id} ha sido actualizado.')
+                    else:
+                        raise ValueError(f'El ID {id} no existe en el archivo de usuarios.')
+            else:
+                    if self.dataframe[self.dataframe['id'] == id].empty:
+                        id = self.dataframe['id'].max() + 1
+                        new_user = pd.DataFrame([[id, occupation, active_since]], columns=self.dataframe.columns)
+                        self.dataframe = pd.concat([self.dataframe, new_user], ignore_index=True)
+                        # Guardar los cambios en el archivo CSV
+                        self.dataframe.to_csv(self.csv_filename, index=False)
+                        print( f'El usuario con ID {id} ha sido creado.')
+                    else:
+                         raise ValueError(f'El ID {id} ya existe en el archivo de usuarios.')
+        else:
+              raise ValueError('No se puede crear un trabajador sin contar con el ID de persona.')
+        
+        
     def remove_user(self, id):
         self.dataframe = self.dataframe[self.dataframe['id'] != id]
 
@@ -96,7 +115,8 @@ class UserManagement(Personas):
 
 
 # Nombre del archivo CSV
-USERS_CSV_ROUTE = 'data/usuarios.csv'
+## PARA EJECUTAR EL ARCHIVO REEMPLAZAR RUTA POR data/usuarios.csv"
+USERS_CSV_ROUTE = '../data/usuarios.csv'
 
 # Cargar el DataFrame existente desde el archivo CSV
 df_usuarios = UserManagement.create_df_from_csv(USERS_CSV_ROUTE)
