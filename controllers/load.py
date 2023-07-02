@@ -14,7 +14,7 @@ def consistency_check(df_base, df_check, column, file, check_name):
     to_delete = boolean_consistency_list[~boolean_consistency_list].index
     df_check.drop(to_delete, inplace=True)
     df_check.to_csv(file, index=False)
-    print(f'Dataframe {check_name} checked')
+    print(f'Dataframe {check_name} checked ✅')
     time.sleep(1)
 
 

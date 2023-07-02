@@ -100,13 +100,14 @@ class UserManagement(Personas):
     def remove_from_df(self, df):
         matching_rows = df['id'] == self.id
        
-        if matching_rows.empty:
+        if matching_rows.any():
+            row_index = df[matching_rows].index[0]
+            df.drop(row_index, inplace=True)
+            df.to_csv(self.csv_filename, index=False)   
+            print('El usuario ha sido eliminado del DataFrame')
+        else:
             raise ValueError("No se encontró el usuario en el DataFrame.")
-
-        row_index = df[matching_rows].index[0]
-        df.drop(row_index, inplace=True)
-        df.to_csv(self.csv_filename, index=False)
-        print('El usuario ha sido eliminado del DataFrame')
+           
 
 
 # Nombre del archivo CSV
