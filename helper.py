@@ -1,6 +1,6 @@
 """
 -Load.py
-
+#
 def consistency_check(df_base, df_check, column, file, check_name)
 # Esta función checkea la consistencia de los dataframes comparando los valores de una columna específica y elimina las filas en el df_check que no estén en el df_check que no cumplen con la verificación.
 # Luego, guarda el DataFrame resultante en un archivo CSV y muestra un mensaje de confirmación.
