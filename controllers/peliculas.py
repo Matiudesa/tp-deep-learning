@@ -25,13 +25,13 @@ class Pelicula:
 
     @classmethod
     def create_df_from_csv(cls, filename):
-        df_mov = pd.read_csv(filename)
-        df_mov["Release Date"] = df_mov["Release Date"].fillna('01-Jan-1900')
-        df_mov["Release Date"] = df_mov["Release Date"].apply(lambda x: datetime.strptime(x, '%d-%b-%Y'))
-        return df_mov
+        df_peliculas = pd.read_csv(filename)
+        df_peliculas["Release Date"] = df_peliculas["Release Date"].fillna('01-Jan-1900')
+        df_peliculas["Release Date"] = df_peliculas["Release Date"].apply(lambda x: datetime.strptime(x, '%d-%b-%Y'))
+        return df_peliculas
 
     @classmethod    
-    def get_from_df(cls, df_mov, id=None, nombre = None, anios = None, generos = None) -> pd.DataFrame:
+    def get_from_df(cls, df_peliculas, id=None, nombre = None, anios = None, generos = None) -> pd.DataFrame:
         query = []
 
         if id is not None:
@@ -51,39 +51,39 @@ class Pelicula:
 
         if len(query) > 0:
             query_str = ' and '.join(query)
-            result_df = df_mov.query(query_str)
+            result_df = df_peliculas.query(query_str)
         else:
-            result_df = df_mov
+            result_df = df_peliculas
         
         return result_df
     
     @classmethod
-    def get_stats(cls, df_mov, anios=None, generos=None) -> None:
-        result_from_get = cls.get_from_df(df_mov, anios=anios, generos=generos)
+    def get_stats(cls, df_peliculas, anios=None, generos=None) -> None:
+        result_from_get = cls.get_from_df(df_peliculas, anios=anios, generos=generos)
         
         if len(result_from_get) > 0:
               # Estadísticas
             print("Película más vieja:")
-            pelicula_vieja = df_mov[df_mov['Release Date'] == df_mov['Release Date'].min()]
+            pelicula_vieja = df_peliculas[df_peliculas['Release Date'] == df_peliculas['Release Date'].min()]
             print(pelicula_vieja)
 
             print("\nPelícula más nueva:")
-            pelicula_nueva = df_mov[df_mov['Release Date'] == df_mov['Release Date'].max()]
+            pelicula_nueva = df_peliculas[df_peliculas['Release Date'] == df_peliculas['Release Date'].max()]
             print(pelicula_nueva)
 
             # Graficas
-            df_mov['Release Year'] = df_mov['Release Date'].dt.year
+            df_peliculas['Release Date'] = df_peliculas['Release Date'].dt.year
 
             plt.figure(figsize=(16,6))
             plt.subplot(121)
-            df_mov['Release Year'].value_counts().sort_index().plot(kind='line', marker='o')
+            df_peliculas['Release Date'].value_counts().sort_index().plot(kind='line', marker='o')
             plt.xticks(rotation=45)
             plt.title('Películas por año')
             plt.xlabel('Año')
             plt.ylabel('Cantidad de películas')
 
             plt.subplot(122)
-            df_mov[generos].sum().plot(kind='bar')
+            df_peliculas[generos].sum().plot(kind='bar')
             plt.title('Películas por género')
             plt.xlabel('Género')
             plt.ylabel('Cantidad de películas')
@@ -92,50 +92,55 @@ class Pelicula:
             plt.show()
 
     
-    def write_df(self, df_mov, overwrite=False):
-         
+    def write_df(self, df_peliculas, overwrite=False) -> None:
+        releaseDate = datetime.strptime(self.fecha_estreno, '%d-%b-%Y')
+        formattedDate = releaseDate.strftime('%d-%b-%Y')
         if self.id:
-            if self.id in df_mov['id'].values:
+            if self.id in df_peliculas['id'].values:
                 if overwrite:
-                    row_index = df_mov[df_mov['id'] == self.id].index[0]
-                    df_mov.at[row_index, 'Name'] = self.nombre
-                    df_mov.at[row_index, 'Release Date'] = self.fecha_estreno
-                    df_mov.at[row_index, 'IMDB URL'] = self.IMDB_URL
-                    for column in df_mov.columns[4:]:
-                        df_mov.at[row_index, column] = 1 if column in self.generos else 0
+                    row_index = df_peliculas[df_peliculas['id'] == self.id].index[0]
+                    df_peliculas.at[row_index, 'Name'] = self.nombre
+                    df_peliculas.at[row_index, 'Release Date'] = formattedDate
+                    df_peliculas.at[row_index, 'IMDB URL'] = self.IMDB_URL
+                    for column in df_peliculas.columns[4:]:
+                        df_peliculas.at[row_index, column] = 1 if column in self.generos else 0
+                    df_peliculas['Release Date'] = df_peliculas['Release Date'].dt.strftime('%d-%b-%Y')
+                    df_peliculas.to_csv(PELICULAS_CSV_ROUTE, index=False)
+                    print('Se ha actualizado el DataFrame en el archivo CSV')
+                    return df_peliculas
                 else:
                     raise ValueError(f'La id {self.id} existe en el DataFrame y pero la sobreescritura esta desactivada')
             else:
                 raise ValueError(f'La id {self.id} no se encuentra en el DataFrame.')
         else:
-            new_id = df_mov['id'].max() + 1
-            new_row = pd.DataFrame([{'id': new_id, 'Name': self.nombre, 'Release Date': self.fecha_estreno, 'IMDB URL': self.IMDB_URL}])
-            for column in df_mov.columns[4:]:
+            new_id = df_peliculas['id'].max() + 1
+            new_row = pd.DataFrame([{'id': new_id, 'Name': self.nombre, 'Release Date': formattedDate, 'IMDB URL': self.IMDB_URL}])
+            for column in df_peliculas.columns[4:]:
                 new_row[column] = 1 if column in self.generos else 0
-            df_mov = pd.concat([df_mov, new_row], ignore_index=True)
-        df_mov['Release Date'] = df_mov['Release Date'].dt.strftime('%d-%b-%Y')
-        df_mov.to_csv(PELICULAS_CSV_ROUTE, index=False)
-        print('Se ha escrito el DataFrame en el archivo CSV')
+            new_row.to_csv(PELICULAS_CSV_ROUTE, mode='a', index=False, header=False)
+            print('Se ha escrito el DataFrame en el archivo CSV')
+            return df_peliculas
+        
 
-    def remove_from_df(self, df_mov):
+    def remove_from_df(self, df_peliculas) -> None:
 
         # Crear una serie booleana que indique dónde todas las propiedades del objeto coinciden con las del DataFrame
         match = (
-                        (df_mov['id'] == self.id) & 
-                        (df_mov['Name'] == self.nombre) &                         
-                        (df_mov['Release Date'].dt.strftime('%d-%b-%Y') == self.fecha_estreno.strftime('%d-%b-%Y')) &   
-                        ( (df_mov['IMDB URL'] == self.IMDB_URL) | (df_mov['IMDB URL'].isna() & pd.isnull(self.IMDB_URL)) )
+                (df_peliculas['id'] == self.id) & 
+                (df_peliculas['Name'] == self.nombre) &                         
+                (df_peliculas['Release Date'] == self.fecha_estreno ) &   
+                ( (df_peliculas['IMDB URL'] == self.IMDB_URL) | (df_peliculas['IMDB URL'].isna() & pd.isnull(self.IMDB_URL)) )
                 )
-        for genero in df_mov.columns[4:]:
+        for genero in df_peliculas.columns[4:]:
             if genero in self.generos:
-                match = match & (df_mov[genero] == 1)
+                match = match & (df_peliculas[genero] == 1)
             else:
-                match = match & (df_mov[genero] == 0)
+                match = match & (df_peliculas[genero] == 0)
         
         if match.any():
-            row_index = df_mov[match].index[0]
-            df_mov.drop(row_index, inplace=True)
-            df_mov.to_csv(PELICULAS_CSV_ROUTE, index=False)
+            row_index = df_peliculas[match].index[0]
+            df_peliculas.drop(row_index, inplace=True)
+            df_peliculas.to_csv(PELICULAS_CSV_ROUTE, index=False)
             print('Se ha eliminado el registro del DataFrame')
         else:
             raise ValueError('No se ha encontrado el registro en el DataFrame')
@@ -143,19 +148,20 @@ class Pelicula:
       
            
 # #Dataframe
-# df_mov = Pelicula.create_df_from_csv(PELICULAS_CSV_ROUTE)
+df_peliculas = Pelicula.create_df_from_csv(PELICULAS_CSV_ROUTE)
 
-# Pelicula.get_stats(df_mov, anios=[1994, 1995], generos=['Action'])
+# Pelicula.get_stats(df_peliculas, anios=[1994, 1995], generos=['Action'])
 
 # Crear una instancia de la clase Pelicula
 # p = Pelicula( 
-#      nombre='Avatar', 
-#      fecha_estreno=datetime.strptime('10-Jan-2015', '%d-%b-%Y'), 
-#      generos=['Sci-Fi', 'Action', 'Adventure', 'Fantasy']
-# )
+#     nombre='Avatar2', 
+#     fecha_estreno='10-Jan-2202', 
+#     generos=['Sci-Fi', 'Action', 'Adventure', 'Fantasy'],
+#     id=1683
+#   )
+# p.remove_from_df(df_peliculas)
 
-
-
+    
 
 
 

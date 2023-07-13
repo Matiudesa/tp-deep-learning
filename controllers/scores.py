@@ -1,7 +1,9 @@
 from datetime import datetime
 from users import USERS_CSV_ROUTE
 from peliculas import PELICULAS_CSV_ROUTE
+from personas import PERSONAS_CSV_ROUTE
 import pandas as pd
+import matplotlib.pyplot as plt
 
 ## PARA EJECUTAR EL ARCHIVO REEMPLAZAR RUTA POR data/scores.csv"
 SCORES_CSV_ROUTE = '../data/scores.csv'
@@ -47,7 +49,6 @@ class Scores:
             result_df = df_scores
 
         return result_df
-
     def write_df(self, df_scores, overwrite=False) -> None:
 
         df_peliculas = pd.read_csv(PELICULAS_CSV_ROUTE)
@@ -97,7 +98,6 @@ class Scores:
 
         # df_scores = df_scores.drop(df_scores[(df_scores['user_id'] == self.usuario_id) & (df_scores['movie_id'] == self.pelicula_id)].index)
         # df_scores.to_csv(SCORES_CSV_ROUTE, index=False)
-
     @staticmethod
     def get_user_avg(df_scores) -> pd.DataFrame:
         return df_scores.groupby('user_id')['rating'].mean()
@@ -115,8 +115,7 @@ class Scores:
     @staticmethod
     def get_movie_avg_by_id(df_scores, movie_id) -> int:
         movie_ratings = df_scores[df_scores['movie_id'] == movie_id]['rating']
-        return int(movie_ratings.mean())
-
+        return int(movie_ratings.mean())    
 
 # df_scores = Scores.create_df_from_csv(SCORES_CSV_ROUTE)
 
@@ -126,6 +125,8 @@ class Scores:
 #     puntuacion=1,
 #     timestamp=datetime.now()
 #     )
+
+# Scores.get_stats(df_scores)
 
 #score.write_df(df_scores, overwrite=True)
 #score.remove_from_df(df_scores)

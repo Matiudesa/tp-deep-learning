@@ -74,15 +74,14 @@ class Personas:
              # Creacion de dataframe para cada género
             df_hombres = result_df[result_df['Gender'] == 'M']
             df_mujeres = result_df[result_df['Gender'] == 'F']
-            plt.hist(df_hombres['year of birth'], bins=range(result_df['year of birth'].min(), result_df['year of birth'].max()+1), alpha=0.5, label='Hombres', color='blue', edgecolor='black')
-            plt.hist(df_mujeres['year of birth'], bins=range(result_df['year of birth'].min(), result_df['year of birth'].max()+1), alpha=0.5, label='Mujeres', color='pink', edgecolor='black')
+            plt.hist(df_hombres['year of birth'], bins=range(result_df['year of birth'].min(), result_df['year of birth'].max()+1), alpha=1, label='Hombres', color='blue', edgecolor='black')
+            plt.hist(df_mujeres['year of birth'], bins=range(result_df['year of birth'].min(), result_df['year of birth'].max()+1), alpha=1, label='Mujeres', color='pink', edgecolor='black')
 
             plt.title('Distribución de años de nacimiento por género')
             plt.xlabel('Año de nacimiento')
             plt.ylabel('Cantidad de personas')
             plt.title('Distibución de años de nacimiento por género')
-            plt.title(f'''Distibución de años de nacimiento por género
-                      Total: {result_df.shape[0]}, Hombres: {df_hombres.shape[0]}, Mujeres: {df_mujeres.shape[0]}''')
+            plt.title(f'Total: {result_df.shape[0]}, Hombres: {df_hombres.shape[0]}, Mujeres: {df_mujeres.shape[0]}')
             # Añade leyenda para indicar qué color corresponde a cada género
             plt.legend(loc='upper right')
             plt.show()
