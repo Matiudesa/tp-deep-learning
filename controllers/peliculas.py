@@ -149,7 +149,7 @@ class Pelicula:
       
            
 # #Dataframe
-df_peliculas = Pelicula.create_df_from_csv(PELICULAS_CSV_ROUTE)
+# df_peliculas = Pelicula.create_df_from_csv(PELICULAS_CSV_ROUTE)
 
 # Pelicula.get_stats(df_peliculas, anios=[1994, 1995], generos=['Action'])
 
