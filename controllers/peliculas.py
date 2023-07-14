@@ -81,13 +81,11 @@ class Pelicula:
             plt.title('Películas por año')
             plt.xlabel('Año')
             plt.ylabel('Cantidad de películas')
-
             plt.subplot(122)
             df_peliculas[generos].sum().plot(kind='bar')
             plt.title('Películas por género')
             plt.xlabel('Género')
             plt.ylabel('Cantidad de películas')
-
             plt.tight_layout()
             plt.show()
 
