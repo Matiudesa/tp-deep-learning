@@ -15,7 +15,6 @@ def consistency_check(df_base, df_check, column, file, check_name):
     df_check.drop(to_delete, inplace=True)
     df_check.to_csv(file, index=False)
     print(f'Dataframe {check_name} checked ✅')
-    time.sleep(1)
 
 
 # Funcion para cargar todos los archivos csv y chequear consistencia
@@ -29,7 +28,6 @@ def load_all(file_personas, file_trabajadores, file_usuarios, file_peliculas, fi
 
     # Chequeo de consistencia
     print('Checking consistency.....')
-    time.sleep(1)
     consistency_check(df_personas, df_trabajadores, 'id', file_trabajadores, 'Personas-Trabajadores')
     consistency_check(df_personas, df_usuarios, 'id', file_usuarios, 'Personas-usuarios')
     consistency_check(df_peliculas, df_scores, 'movie_id', file_scores, 'Peliculas-Scores')
