@@ -72,8 +72,6 @@ class Pelicula:
             print(pelicula_nueva)
 
             # Graficas
-            df_peliculas['Release Date'] = df_peliculas['Release Date'].dt.year
-
             plt.figure(figsize=(16,6))
             plt.subplot(121)
             df_peliculas['Release Date'].value_counts().sort_index().plot(kind='line', marker='o')
