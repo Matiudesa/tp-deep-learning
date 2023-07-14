@@ -21,8 +21,8 @@ def save_all(df_personas, df_trabajadores, df_usuarios, df_peliculas, df_scores,
 
 
 def save_backup():
-    shutil.copyfile(PELICULAS_CSV_ROUTE, 'backup/peliculas.csv')
-    shutil.copyfile(PERSONAS_CSV_ROUTE, 'backup/personas.csv')
-    shutil.copyfile(SCORES_CSV_ROUTE, 'backup/scores.csv')
-    shutil.copyfile(TRABAJADORES_CSV_ROUTE, 'backup/trabajadores.csv')
+    shutil.copyfile(PELICULAS_CSV_ROUTE, '../backup/peliculas.csv')
+    shutil.copyfile(PERSONAS_CSV_ROUTE, '../backup/personas.csv')
+    shutil.copyfile(SCORES_CSV_ROUTE, '../backup/scores.csv')
+    shutil.copyfile(TRABAJADORES_CSV_ROUTE, '../backup/trabajadores.csv')
     print("Se han guardado todos los archivos CSV.")
