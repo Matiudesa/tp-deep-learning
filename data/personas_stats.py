@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 def load_data():
-    data_personas = pd.read_csv('tp-deep-learning\data\personas.csv')
+    data_personas = pd.read_csv('data/personas.csv')
     return data_personas
 
 def personas_generos(data_personas):

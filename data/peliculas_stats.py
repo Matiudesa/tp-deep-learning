@@ -27,7 +27,8 @@ def peliculas_fechas(data):
     movies_per_year = data['Release Year'].value_counts().sort_index()
 
     plt.figure(figsize=(10, 6))
-    movies_per_year.plot(kind='bar', color='skyblue')
+    ax = movies_per_year.plot(kind='bar', color='skyblue')
+    ax.set_yscale('log')
     plt.xlabel('Release Year')
     plt.ylabel('Number of Movies')
     plt.title('Number of Movies Released Each Year')
