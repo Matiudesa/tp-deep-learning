@@ -3,7 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 def load_data():
-    data_scores = pd.read_csv('tp-deep-learning\data\scores.csv')
+    data_scores = pd.read_csv('data/scores.csv')
     return data_scores
 
 def ratings_distribution(data_scores):

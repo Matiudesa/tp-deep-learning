@@ -36,7 +36,7 @@ def peliculas_fechas(data):
 
     return movies_per_year
 
-data = load_data('tp-deep-learning\data\peliculas.csv')
+data = load_data('data/peliculas.csv')
 
 peliculas_genero(data)
 
